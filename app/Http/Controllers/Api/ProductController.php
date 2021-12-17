@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\ProductNotFound;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Product\ProductResource;
@@ -22,7 +23,7 @@ class ProductController extends Controller
         return response([
             'data'=>ProductResource::collection($products)]);
         // return response(['message'=>'sasasa']);
-        // return response()->json(['message'=>'sasasa']);
+        // return response()->json(['message'=>$products]);
 
     
     }
@@ -57,8 +58,8 @@ class ProductController extends Controller
         }
    
         $product = Product::create($input);
-   
-        return response(new ProductResource($product));
+        return response(['data' => new ProductResource($product),'message'=>'Product addded successfully']);
+        // return response(['data' =>new ProductResource($product)],201);
     }
 
     /**
@@ -69,6 +70,8 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+        $this->ProductCheck($id);
+
         //
     }
 
@@ -80,6 +83,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
+        $this->ProductCheck($id);
+
         //
     }
 
@@ -92,6 +97,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->ProductCheck($id);
+
         //
     }
 
@@ -103,6 +110,18 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->ProductCheck($id);
+        Product::find($id)->delete();
+        return response(['message'=>'Record deleted successfully']);
+
     }
+
+    public function ProductCheck($id){
+        
+        if(is_null(Product::find($id))){
+
+            throw new ProductNotFound;
+        }
+    }
+
 }
