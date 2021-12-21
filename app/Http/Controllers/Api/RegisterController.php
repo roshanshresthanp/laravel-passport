@@ -14,13 +14,13 @@ class RegisterController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
    
         if($validator->fails()){
-            return response()->json('Validation Error.', $validator->errors());       
+            return response()->json(['message'=> $validator->errors()]);       
         }
    
         $input = $request->all();
@@ -39,7 +39,7 @@ class RegisterController extends Controller
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user(); 
             $success['token'] =  $user->createToken('MyApp')-> accessToken; 
-            $success['name'] =  $user->name;
+            // $success['name'] =  $user->name;
    
             // return $this->sendResponse($success, 'User login successfully.');
             return response()->json(['message'=>'User login successfully.','success'=>$success]);
