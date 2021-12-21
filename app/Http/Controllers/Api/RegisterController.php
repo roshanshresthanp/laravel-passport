@@ -29,7 +29,7 @@ class RegisterController extends Controller
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
    
-        return response()->json(['message'=>'User register successfully.']);
+        return response()->json(['message'=>'User register successfully.','success'=>$success]);    
         // return $this->sendResponse($success, 'User register successfully.');
     }
 
@@ -42,7 +42,7 @@ class RegisterController extends Controller
             $success['name'] =  $user->name;
    
             // return $this->sendResponse($success, 'User login successfully.');
-            return response()->json(['message'=>'User login successfully.']);
+            return response()->json(['message'=>'User login successfully.','success'=>$success]);
 
         } 
         else{ 

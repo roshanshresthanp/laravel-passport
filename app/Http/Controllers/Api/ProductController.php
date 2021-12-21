@@ -71,8 +71,9 @@ class ProductController extends Controller
     public function show($id)
     {
         $this->ProductCheck($id);
+        $product = Product::find($id);
+        return response(new ProductResource($product));
 
-        //
     }
 
     /**
@@ -84,8 +85,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $this->ProductCheck($id);
-
-        //
+        
     }
 
     /**
@@ -98,8 +98,10 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $this->ProductCheck($id);
+        $product = Product::find($id);
+        $product->update($request->all());
 
-        //
+        return response(['data'=>new ProductResource($product),'message'=>'Product updated successfully']);
     }
 
     /**
@@ -119,7 +121,6 @@ class ProductController extends Controller
     public function ProductCheck($id){
         
         if(is_null(Product::find($id))){
-
             throw new ProductNotFound;
         }
     }
